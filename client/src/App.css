@@ -1,0 +1,107 @@
+
+
+.footer{
+  background-image: linear-gradient(to bottom right, black, rgb(51, 51, 51));
+  margin-top:10px auto;
+  padding: 20px 0px 20px 0px;
+}
+.jumbotron {
+  padding:40px 30px 30px 30px;
+  margin:0px auto;
+  background: #e6e7ec ;
+  color:black;
+  border-bottom: 1px solid rgb(179, 176, 176);
+}
+
+.navbar-dark {
+  background-color: #14161d;
+}
+
+.nav-item :hover {
+  border-bottom: 1px solid #e6e7ec;
+}
+
+.subnav {
+   background-color: #47474b;
+   color: white;
+}
+
+.subnav .nav-link {
+  color: white;
+}
+
+.first {
+  background-color: white;
+}
+
+.codd {
+  background-color: #e6e7ec;
+}
+
+
+/*..forms...*/
+
+.form-control[type=text] {
+   border: 1.5px ridge #555;
+}
+
+.form-control[type=password] {
+  border: 1.5px groove #555;
+}
+
+.form-control[type=textarea] {
+  border: 1.5px ridge #555;
+}
+
+.form-control[type=checkbox] {
+  border: 1.5px ridge #555;
+}
+
+.form-control[type=file] {
+  border: 1.5px ridge #555;
+}
+
+.form-select[type=select] {
+  border: 1.5px ridge #555;
+}
+
+
+.igadd {
+  background-color: #0275d8;
+}
+
+.igadd .igt {
+  background-color: #0275d8;
+  border: 1.5px groove #0275d8;
+}
+
+.igadd .igt i{
+   background-color: #0275d8;
+   color: white;
+}
+
+.igadd2 {
+  background-color: #1d8f4a;
+}
+
+.igadd2 .igt {
+  background-color: #1d8f4a;
+  border: 1.5px ridge #1d8f4a;
+}
+
+.igadd2 .igt i{
+  background-color: #1d8f4a;
+  color: white;
+}
+
+.required {
+  color: red;
+}
+
+.cview {
+  box-shadow: 0px 2px 4px 0 rgba(0,0,0,0.2);
+}
+
+.cview1 {
+  box-shadow: 0px 2px 2px 0 rgba(0,0,0,0.2);
+}

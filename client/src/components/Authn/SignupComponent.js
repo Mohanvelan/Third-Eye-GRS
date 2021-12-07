@@ -66,19 +66,19 @@ class Signup extends Component
       console.log('generated otp: ',OTP,'\n email: ',email);
       var msg = "Your OTP for verification is "+OTP+". It will be expired after 5 minutes.";
       
-      emailjs.send("service_gjg52fc","template_jt4zcjh",{ 
+      emailjs.send("service_gjg52fc","template_jt4zcjh", { 
          message: msg,
          reply_to: email,
-         to_name: fname + lname
+         to_name: fname +' '+ lname
 
       }, "user_ixb8MCpbywK1dJ96NiYyz")
       .then((msg) => {
           alert('6-digit OTP sent to your mail-id');
+          
       },(err) => {
            alert('Error: while sending...try again...\n'+err);
       });
       
-
       return OTP;
    }
 
@@ -130,7 +130,7 @@ class Signup extends Component
                                     className='form-control'
                                     validators={{
                                         required, minLength: minLength(1), 
-                                        maxLength: maxLength(10) 
+                                        maxLength: maxLength(15) 
                                     }}
                               />
                          </InputGroup>
@@ -140,7 +140,7 @@ class Signup extends Component
                                   messages={{
                                      required: 'Required',
                                      minLength: 'Must be less greater than or equal to 1 character',
-                                     maxLength: 'Must be lesser than or equal to 10 characters'
+                                     maxLength: 'Must be lesser than or equal to 15 characters'
                                   }}
                         />
                       </Col>
@@ -157,7 +157,7 @@ class Signup extends Component
                                      className='form-control'
                                      validators={{
                                         required, minLength: minLength(1), 
-                                        maxLength: maxLength(10)
+                                        maxLength: maxLength(15)
                                      }}
                                  />
                              </InputGroup>
@@ -167,7 +167,7 @@ class Signup extends Component
                                   messages={{
                                      required: 'Required',
                                      minLength: 'Must be less greater than or equal to 1 character',
-                                     maxLength: 'Must be lesser than or equal to 10 characters'
+                                     maxLength: 'Must be lesser than or equal to 15 characters'
                                   }}
                               />
                            </Col>
@@ -335,30 +335,29 @@ class Signup extends Component
            </Row>
          
           <Modal isOpen={this.state.isOpen} className='p-2'>
-
-             <ModalHeader tag='h5'> <span className='ml-2'>Email Verification</span> </ModalHeader>
-             <ModalBody className='p-2'>
-
+             <ModalHeader tag='h5'  toggle={() => this.toggleModal()}>
+                 <span className='ml-2'>Email Verification</span> 
+            </ModalHeader>
+            
+             <ModalBody className='p-3'>
                 <LocalForm onSubmit={(values) => this.handleSubmitVerify(values)}>
-                    <Row className='form-group'>
-                       <Control type='password' model='.otp' className='form-control' name='otp'
+                    <div className='form-group'>
+                       <Label htmlFor='otp' className='p-2' style={{color: 'black'}}> 6-digit Number</Label>
+                       <Control type='password' model='.otp' className='form-control mx-1' name='otp'
                            placeholder='6-digit number' 
                            validators={{ required }}
                        />
-
                        <Errors model='.otp' className='text-danger'
                           show='touched'
                           messages={{
                              required: 'Required'
                           }}
                        />
-                    </Row>
-
-                    <Row>
-                       <Button type='submit' className='btn btn-danger'>
-                          Verify
-                       </Button>
-                    </Row>
+                    </div>
+          
+                  <div className='d-flex justify-content-end'>
+                    <Button type='submit' className='btn btn-danger my-2'> Verify </Button>  
+                  </div>  
                 </LocalForm>
              </ModalBody>
           </Modal>

@@ -88,8 +88,8 @@ export const adminLogin = (eid, pwd) => (dispatch) => {
    .then(res => res.json())
    .then(res => {
        if(res.isLogin){
-         dispatch(adminLoginSuccess(res.data)); 
          alert(res.msg);
+         dispatch(adminLoginSuccess(res.data)); 
        }
        else{
            alert(res.msg);

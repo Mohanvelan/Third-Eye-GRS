@@ -13,7 +13,8 @@ export const ADD_PROFILE_ERR = 'ADD_PROFILE_ERR';
 export const ADD_EMP_PROFILE = 'ADD_EMP_PROFILE';
 export const ADD_EMP_PROFILE_ERR = 'ADD_EMP_PROFILE_ERR';
 
-export const ADD_DASHBOARD = 'ADD_DASHBOARD';
+export const ADD_USER_DASH = 'ADD_USER_DASH';
+export const ADD_EMP_DASH = 'ADD_EMP_DASH';
 export const ADD_RAISED = 'ADD_RAISED';
 export const ERR_RAISED = 'ERR_RAISED';
 export const ADD_PENDING = 'ADD_PENDING';
@@ -25,3 +26,8 @@ export const ADD_RECEIVED = 'ADD_RECEIVED';
 export const ERR_RECEIVED = 'ERR_RECEIVED';
 export const ADD_EMP_RESOLVED = 'ADD_EMP_RESOLVED';
 export const ERR_EMP_RESOLVED = 'ERR_EMP_RESOLVED';
+
+export const ADD_USER_REPLY = 'ADD_USER_REPLY';
+export const ADD_EMP_REPLY = 'ADD_EMP_REPLY';
+
+

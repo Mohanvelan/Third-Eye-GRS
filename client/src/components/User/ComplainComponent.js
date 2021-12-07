@@ -17,12 +17,14 @@ class Complain extends Component
           isOpen: false,
           id: null,
           selectedFile: null,
+          checked: true,
           values: []
        };
 
        this.handleChange = this.handleChange.bind(this);
        this.handleSubmit = this.handleSubmit.bind(this);
        this.selectFile = this.selectFile.bind(this);
+       this.onCheck = this.onCheck.bind(this);
     }
 
     handleChange(event){
@@ -43,6 +45,22 @@ class Complain extends Component
        });
     }
 
+    onCheck() {
+      this.setState ({
+        checked: !this.state.checked
+      });
+    }
+
+    showDetails(data) {
+      if(data === null)
+         return (<>
+             <p className='pt-2'> None</p>
+          </>);
+      else
+         return(<>
+           <p className='pt-2'> {data.type}</p>
+        </>);
+    }
     
     generateID() {
           
@@ -68,19 +86,21 @@ class Complain extends Component
     }
 
     handleFinalSubmit() {
-        this.toggleModal();
+      this.toggleModal();
 
-        const fdata = new FormData();
-        fdata.append('proof', this.state.selectedFile);
-
-        console.log('selectedFile: ',this.state.selectedFile);
-        console.log('path: ',fdata.get('proof').webkitRelativePath);
-
-        this.props.postComplaint(new Cookies().get('userid'), this.state.id, this.state.values.service, 
-          this.state.values.dept, this.state.values.sub, this.state.values.issue, 
-          fdata, this.state.selectedFile.name, this.state.selectedFile.type);
+       console.log('selectedFile: ',this.state.selectedFile);
         
-        window.location.reload();
+       const fdata = new FormData();
+       fdata.append('userid', new Cookies().get('userid'));
+       fdata.append('issueid', this.state.id);  fdata.append('service', this.state.values.service);
+       fdata.append('dept', this.state.values.dept);  fdata.append('sub', this.state.values.sub);
+       fdata.append('issue', this.state.values.issue);  fdata.append('proof', this.state.selectedFile);
+       fdata.append('proofname', this.state.selectedFile.name);
+       fdata.append('prooftype', this.state.selectedFile.type);
+
+       this.props.postComplaint(fdata);
+
+       window.location.reload();
     }
 
     render() {
@@ -114,7 +134,7 @@ class Complain extends Component
                    <Row className='form-group p-2'>
                        <Label htmlFor='dept' className='py-2'>Area of Complanint <span className='required'>*</span> </Label>
                        <Control.select model='.dept' className='form-select' name='dept' type='select'
-                         
+                          validators={{required}}
                        >
                          <option value='none'>- Select Any -</option>
                        {
@@ -140,7 +160,7 @@ class Complain extends Component
                      
                         <InputGroup className=''>
                           <Control.text model='.sub' className='form-control' name='sub'
-                                placeholder=' Subject' type='text' 
+                                placeholder=' Subject' type='text' validators={{required}}
                                 />
 
                             <InputGroupAddon addonType='append' className=''>
@@ -162,9 +182,9 @@ class Complain extends Component
 
                    <Row className='form-group p-2'>
                        <Label htmlFor='issue' className='py-2'>Issue to be solved (elaborately) <span className='required'>*</span> </Label>
-                       <Control.textarea model='.issue' className='form-control' name='.issue'
+                       <Control.textarea model='.issue' className='form-control' name='issue'
                           placeholder=' Raise your issue...' rows={7} type='textarea'
-                          
+                          validators={{required}}
                        />
 
                        <Errors model='.issue' className='text-danger'
@@ -177,22 +197,23 @@ class Complain extends Component
 
                    <Row className='p-2' hidden={this.state.service ==  'suggestion'}>   
                      <Label htmlFor='proof' className='py-2' md={12}> Proof (if any)</Label>
+
+                      <Col md={1}>
+                        <div className='pt-2'>
+                         <Control.checkbox model='.checked' className='form-check-input' onClick={this.onCheck}
+                         />
+                        </div>
+                      </Col>
                      
-                      <Col md={7}>
-                          <Control.file model='.proof' className='form-control' name='proof'
+                      <Col md={6}>
+                          <Control.file model='.proof' className='form-control' name='proof' disabled={this.state.checked}
                                 placeholder='Choose any file' type='file' onChange={this.selectFile}
                           />
                        </Col>
                         
                        <Col md={{size: 4, offset: 1}}>
-                          <Control.select model='mediaType' className='form-select' type='select' name='mediaType'>
-                            <option value='none'>None</option>
-                            <option value='audio'>Audio</option>
-                            <option value='video'>Video</option>
-                            <option value='image'>Image</option>
-                            <option value='textual'>Textual</option>
-                          </Control.select>
-                      </Col>
+                           {this.showDetails(this.state.selectedFile)}
+                       </Col>
 
                       <p className='pt-2' style={{fontSize: '13px'}}>
                         * Proofs can be of any form such as audio, video, document and image. It should not contain inappropriate content
@@ -212,18 +233,29 @@ class Complain extends Component
             <Modal isOpen={this.state.isOpen}>
               <ModalHeader>Confirmation</ModalHeader>
               <ModalBody>
-                <Table className='p-2'>
-                  <tr><td>UserID: </td> <td> { new Cookies().get('userid') } </td> </tr>
-                  <tr><td>Issue ID:</td> <td> { this.state.id } </td></tr>  
-                  <tr><td>Service:</td> <td> { this.state.values.service } </td></tr>  
-                  <tr>
-                     <td>Area of complaint:</td> 
+                <Table className='m-2 p-2'>
+                  <tr className='m-2 p-2'>
+                     <td><b>UserID: </b></td> <td> { new Cookies().get('userid') } </td> 
+                  </tr>
+                  <tr className='m-2 p-2'>
+                     <td><b>Issue ID:</b></td> <td> { this.state.id } </td>
+                  </tr>  
+                  <tr className='m-2 p-2'>
+                    <td><b>Service:</b></td> <td> { this.state.values.service } </td>
+                  </tr>  
+                  <tr className='m-2 p-2'>
+                     <td><b>Area of complaint:</b></td> 
                      <td> { this.state.values.dept } </td>
                   </tr> 
-                  <tr><td>Subject: </td> <td> {this.state.values.sub} </td></tr>
-                  <tr><td>Issue:</td> <td> {this.state.values.issue} </td></tr> 
-                  <tr><td>Proof:</td> <td> {this.state.values.proof? "Yes": "No"} </td></tr> 
-                  <tr><td>selectedFile</td> <td> {JSON.stringify(this.state.selectedFile)} </td></tr>
+                  <tr className='m-2 p-2'>
+                     <td><b>Subject: </b></td> <td> {this.state.values.sub} </td>
+                  </tr>
+                  <tr className='m-2 p-2'>
+                     <td><b>Issue:</b></td> <td> {this.state.values.issue} </td>
+                  </tr> 
+                  <tr className='m-2 p-2'>
+                     <td><b>Proof:</b></td> <td> {this.state.values.proof? "Yes": "No"} </td>
+                  </tr> 
                 </Table>
               </ModalBody>
               <ModalFooter>

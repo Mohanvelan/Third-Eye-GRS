@@ -8,10 +8,11 @@ import { AdminLogin } from './reducers/adminlogin';
 import { UserRegister } from './reducers/userregister';
 import { Departments } from './reducers/departments';
 import { Profile } from './reducers/profile';
-import { Dashboard } from './reducers/dashboard';
+import { UserDash, EmpDash } from './reducers/dashboard';
 import { Raised, Received } from './reducers/raised';
 import { Pending } from './reducers/pending';
 import { Resolved, EmpResolved } from './reducers/resolved';
+import { UserReply, EmpReply } from './reducers/reply';
 
 export const ConfigStore = () => {
      
@@ -22,12 +23,15 @@ export const ConfigStore = () => {
               userregister: UserRegister,
               departments: Departments,
               profile: Profile,
-              dashboard: Dashboard,
+              userdash: UserDash,
+              empdash: EmpDash,
               raised: Raised,
               pending: Pending,
               resolved: Resolved,
               received: Received, 
-              empresolved: EmpResolved
+              empresolved: EmpResolved,
+              userreply: UserReply,
+              empreply: EmpReply
           }),
 
           applyMiddleware(thunk)

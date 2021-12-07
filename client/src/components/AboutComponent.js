@@ -17,7 +17,7 @@ class About extends Component
                </div>
 
                <div className="row row-content">
-                  <div className="col-12 col-md-8 p-3">
+                  <div className="col-12 p-3">
                      <h4>Third Eye - A Public Grievance Redressal System</h4>
                      <div className='mt-4' style={{textAlign: 'justify'}}>
                         <p>
@@ -27,26 +27,13 @@ class About extends Component
                         </p>
                      </div>
                   </div>
+             </div>
 
-                  <div className="col-12 col-md-4 p-3">
-                     <Card>
-                        <CardHeader className="bg-primary text-white">Facts At a Glance</CardHeader>
-                        <CardBody>
-                           <dl className="row p-2">
-                                 <dt className="col-6">Started</dt>
-                                 <dd className="col-6"> 14 Mar, 2018</dd>
-                                 <dt className="col-6">Complaints Raised</dt>
-                                 <dd className="col-6">000</dd>
-                                 <dt className="col-6">Solved </dt>
-                                 <dd className="col-6">000</dd>
-                                 <dt className="col-6">In Progress</dt>
-                                 <dd className="col-6">000</dd>
-                                 <dt className="col-6">Suggestions</dt>
-                                 <dd className="col-6">000</dd>
-                           </dl>
-                        </CardBody>
-                    </Card>
-                  </div>
+             <div className='py-3'>
+                 <h4 className='pt-3'> How We Solve</h4>
+
+                 <img src='/assets/process-2.PNG' alt='' className='p-3' />
+
              </div>
 
              <div className='col-12 mt-3'>

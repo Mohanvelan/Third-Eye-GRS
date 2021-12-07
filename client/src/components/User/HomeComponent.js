@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { Jumbotron, Card, CardBody, Row, Col, ListGroup, ListGroupItem, ListGroupItemHeading,
-        ListGroupItemText, Badge } from 'reactstrap';
-import { AiFillHourglass, AiFillLike, AiFillRocket, AiFillWechat } from 'react-icons/ai';
+        ListGroupItemText, Badge, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { AiFillHourglass, AiFillLike, AiFillRocket, AiFillWechat, AiOutlineFile } from 'react-icons/ai';
 import { FiClock } from 'react-icons/fi';
 import { GoIssueOpened } from 'react-icons/go';
 import { HiStatusOnline } from 'react-icons/hi';
-import { MdFeedback, MdCached } from 'react-icons/md';
+import { MdFeedback } from 'react-icons/md';
 import { BiUserCircle } from 'react-icons/bi';
-import { GrStatusGood } from 'react-icons/gr';
 import { IoMdList } from 'react-icons/io';
-import { Tab, Nav } from 'react-bootstrap';
 
+import { Link } from 'react-router-dom';
+import { Tab, Nav } from 'react-bootstrap';
+import FileViewer from 'react-file-viewer';
+
+var mimetypes = require('mime-types');
 
 class Home extends Component 
 {
@@ -19,6 +22,7 @@ class Home extends Component
 
         this.state = {
             activeKey: 1,
+            openModal: false,
             fetched: null
         };
         this.toggle = this.toggle.bind(this);
@@ -32,6 +36,11 @@ class Home extends Component
        });
     }
 
+   toggleFileViewer() {
+      this.setState ({
+         openModal: !this.state.openModal
+      });
+   }
     
     handleClick(fetch) {
        this.setState ({
@@ -43,12 +52,25 @@ class Home extends Component
     {
         if(fetched === null)
           return (
-             <div className='p-5'>No Item is selected...</div>
+            <div className='mt-5 pt-5' >
+               <div className='d-flex justify-content-center pt-3'>
+                  <img src='/assets/thirdeye.png' alt='Third eye' style={{opacity: '0.3', borderRadius: '50%', height: '70px', width: '70px'}} />
+                </div> <br/>
+                <h5 className='d-flex justify-content-center'> No Item is Selected... </h5> 
+            </div>
           );
+   
         else
           return (
              <div className='pt-3 pl-4'>
-                <h4>{fetched.sub}</h4> <hr/>
+                <div className='row'>
+                    <h4 className='col-md-8'> {fetched.sub} </h4> 
+                    <span className='col-md-4'>
+                       { (fetched.status === 'resolved')? <i className='fa fa-check-circle fa-lg text-success'></i> :
+                          <i className='fa fa-spinner fa-lg text-primary'></i> }
+                    </span>
+                </div> <hr/>
+
                 <dl>
                 <dt><GoIssueOpened /> Issue Id </dt> <dd>{fetched.issueid}</dd>
                 <dt><BiUserCircle /> Raised by </dt> <dd>{fetched.userid}</dd>
@@ -56,11 +78,37 @@ class Home extends Component
                 <dt><FiClock /> Raised on </dt>  
                 <dd>{new Intl.DateTimeFormat('en', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit'})
                                           .format(new Date(fetched.date))} </dd>
+
+                <dt>Proof</dt>
+                <dd>
+                   <a onClick={() => this.toggleFileViewer()}> <AiOutlineFile /> {fetched.proof.name} </a> <br/>
+                   <p className='text-primary py-2' onClick={() => this.toggleFileViewer()}>&#62; <u> Tap to Open...</u></p>
+                    
+
+                   <Modal size='lg' isOpen={this.state.openModal} toggle={() => this.toggleFileViewer()} contentClassName='custom-modal'>
+                      <ModalHeader>{fetched.proof.name}</ModalHeader>
+                       <ModalBody>
+                        <div className='p-2' style={{height: '550px', overflow: 'scroll'}}>
+                           <FileViewer 
+                              fileType={ mimetypes.extension(fetched.proof.type) }
+                              filePath={fetched.proof.path}
+                           />
+                        </div>
+                      </ModalBody>
+                  </Modal>
+                </dd>
+
                 <dt><HiStatusOnline /> Status </dt> 
                 <dd>
-                 { (fetched.status === 'pending')? <MdCached />: <GrStatusGood /> } {' '}
-                 { fetched.status.toUpperCase() }  
+                 { (fetched.status === 'pending')? <i className='fa fa-spinner text-primary'></i>: <i className='fa fa-check-circle text-success'></i> } {' '}
+                 <span className='p-2'> { fetched.status.toUpperCase() }  </span>
                 </dd>
+
+                <dt></dt>
+                <dd className='pt-3'>
+                  <Link to={`/user/${fetched.issueid}`}> <i className='fa fa-angle-double-right'></i> Tap for More info </Link> 
+                </dd>
+
                 </dl>
              </div>
           );
@@ -70,28 +118,40 @@ class Home extends Component
     renderList(fetched, isErr, errMess) {
        
       if(isErr) 
-         return ( <div>{errMess}</div> );
+         return ( <div>{errMess}</div> ); 
+      
+      else if (fetched.length === 0)
+         return (
+            <div className='m-5 p-5'> <p> Not Available </p>  </div>
+         );
 
       else
       { 
        return(
-         <> <ListGroup>
+         <> <ListGroup className='lg'>
           {
              fetched.map((fetch) => {
                    
               return(
-                <div>
-                   <ListGroupItem active style={{height: '110px'}} onClick={() => this.handleClick(fetch)}>
-                        <ListGroupItemHeading className='row'>
-                           <div className='col-9'> {fetch.sub} </div>
-                           <div className='col-3'>
-                              <Badge> {new Intl.DateTimeFormat('en', {day:'2-digit', month:'short', year:'numeric'}).format(new Date(fetch.date))} </Badge>
-                           </div>
-                        </ListGroupItemHeading>
-                        <ListGroupItemText>
-                           <p>Issue No. {fetch.issueid} </p>
-                           {fetch.status.toUpperCase()}
-                        </ListGroupItemText>
+                <div className='lgi'> 
+                   <ListGroupItem className='lgisub' active={this.state.fetched === null || this.state.fetched.issueid !== fetch.issueid}
+                      style={{height: '110px', margin: '2px 0 3px 0'}} color='primary'
+                      onClick={() => this.handleClick(fetch)}>
+                   
+                     <ListGroupItemHeading className='row'>
+                        <div className='col-9'> {fetch.sub} </div>
+                        <div className='col-3'>
+                           <Badge> {new Intl.DateTimeFormat('en', {day:'2-digit', month:'short', year:'numeric'}).format(new Date(fetch.date))} </Badge>
+                        </div>
+                     </ListGroupItemHeading>
+                     <ListGroupItemText>
+                         <div> Issue No. {fetch.issueid} </div> 
+                         <span className='pt-1'>
+                            {(fetch.status.toUpperCase() ==='RESOLVED')? <i className='fa fa-check-circle'></i>
+                          : <i className='fa fa-spinner'></i>} {' '} {fetch.status.toUpperCase()}
+                         </span>
+                    
+                     </ListGroupItemText>
                   </ListGroupItem>             
                 </div>
               );
@@ -128,7 +188,7 @@ class Home extends Component
                                  <AiFillRocket className='col-3 mt-2' size='md' />
                                  <span className='col-9'>
                                     Raised  <p style={{fontSize: '25px', color: '#0275d8'}}> 
-                                         {(this.props.dash!==undefined)?'0':this.props.dash[0].raised}
+                                         { this.props.dash.raised }
                                     </p>
                                  </span>
                                </CardBody>
@@ -143,7 +203,7 @@ class Home extends Component
                                <AiFillLike className='col-3 mt-2' size='md' />
                                <span className='col-9'>
                                   Resolved <p style={{fontSize: '25px', color: '#1d8f4a'}}> 
-                                    {(this.props.dash!==undefined)?'0':this.props.dash[0].resolved} 
+                                     { this.props.dash.resolved }    
                                    </p>
                                </span>
                                </CardBody>
@@ -158,7 +218,7 @@ class Home extends Component
                              <AiFillHourglass className='col-3 mt-2' size='md' />
                                <span className='col-9'>
                                   Pending  <p style={{fontSize: '25px', color: '#CC0000'}}> 
-                                  {(this.props.dash!==undefined)?'0':this.props.dash[0].pending}
+                                    { this.props.dash.pending }
                                   </p>
                                </span>
                               </CardBody>
@@ -173,8 +233,8 @@ class Home extends Component
                               <AiFillWechat className='col-3 mt-2' size='md' />
                                <span className='col-9'>
                                   Suggestions  <p style={{fontSize: '25px', color: '#1d8f4a'}}> 
-                                   {(this.props.dash!==undefined)?'0':this.props.dash[0].suggestions}
-                                   </p>
+                                   { this.props.dash.suggested }
+                                  </p>
                                </span>
                               </CardBody>
                               </Card>
@@ -204,15 +264,17 @@ class Home extends Component
 
                <Row className='py-3 px-5'>
                   <Tab.Content>
-                     <Tab.Pane eventKey="first" style={{height: '500px'}}>
+                     <Tab.Pane eventKey="first" style={{height: '700px'}}>
                           <Row> 
-                            <div> <h5> <IoMdList /> RAISED BY YOU </h5> </div>
+                            <div> <h5> # RAISED BY YOU </h5> <hr/> </div>
                           </Row>
                         <Row className='mt-4'>
                            <Col md={5}>
-                            { this.renderList(this.props.raisedData, this.props.raisedErr, this.props.raisedErrMess) } 
+                           <div className='mylist'>
+                             { this.renderList(this.props.raisedData, this.props.raisedErr, this.props.raisedErrMess) } 
+                           </div>
                            </Col>
-                           <Col md={7}>
+                           <Col md={7}>                             
                              <div className='px-4 py-1'>
                                { this.renderData(this.state.fetched) }
                              </div>
@@ -220,13 +282,15 @@ class Home extends Component
                         </Row>
                      </Tab.Pane>
 
-                     <Tab.Pane eventKey="second" style={{height: '500px'}}>
+                     <Tab.Pane eventKey="second" style={{height: '700px'}}>
                          <Row> 
-                            <div> <h5> <IoMdList /> RESOLVED BY US </h5> </div>
+                            <div> <h5> # RESOLVED BY US </h5>  <hr/> </div>
                           </Row>
                         <Row className='mt-4'>
                            <Col md={5}>
+                           <div className='mylist'>
                             { this.renderList(this.props.resolvedData, this.props.resolvedErr, this.props.resolvedErrMess) } 
+                           </div>
                           </Col>
                            <Col md={7}>
                             <div className='px-4 py-1'>
@@ -236,13 +300,15 @@ class Home extends Component
                         </Row>
                      </Tab.Pane>
                      
-                     <Tab.Pane eventKey="third" style={{height: '500px'}}>
+                     <Tab.Pane eventKey="third" style={{height: '700px'}}>
                         <Row> 
-                            <div> <h5> <IoMdList /> IN PROGRESS </h5> </div>
+                            <div> <h5> # IN PROGRESS </h5>  <hr/> </div>
                           </Row>
                        <Row className='mt-4'>
                            <Col md={5}>
+                           <div className='mylist'>
                             { this.renderList(this.props.pendingData, this.props.pendingErr, this.props.pendingErrMess) } 
+                           </div>
                            </Col>
                            <Col md={7}>
                             <div className='px-4 py-1'>

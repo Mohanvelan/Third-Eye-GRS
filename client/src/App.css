@@ -105,3 +105,14 @@
 .cview1 {
   box-shadow: 0px 2px 2px 0 rgba(0,0,0,0.2);
 }
+
+.mylist {
+ overflow-y: scroll;
+ overflow-x: hidden;
+ height: 570px;
+ border-right: 2px solid #858585;
+}
+
+.custom-modal {
+   width: 800px;
+}

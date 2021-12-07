@@ -1,12 +1,12 @@
 import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
 
-//fetchDashboard
-export const fetchDashboard = (email) => (dispatch) => {
+//userDash
+export const userDash = (email) => (dispatch) => {
     
      let obj = {email: email};
 
-     return fetch(baseUrl + 'dashboard', {
+     return fetch(baseUrl + 'userDash', {
          method: 'POST',
          body: JSON.stringify(obj),
          headers: {
@@ -29,41 +29,61 @@ export const fetchDashboard = (email) => (dispatch) => {
     .then(res => res.json())
     .then(res => {
         if(!res.isErr) 
-          dispatch(addDashboard(res.data))
+          dispatch(addUserDash(res.data))
     })
     .catch(err => alert(err));
 };
 
-export const addDashboard = (res) => ({
-     type: ActionTypes.ADD_DASHBOARD,
+export const addUserDash = (res) => ({
+     type: ActionTypes.ADD_USER_DASH,
      payload: res 
 });
 
-
-// postComplaint
-export const postComplaint = (userid, issueid, service, dept, sub, issue, proofData, proofname, prooftype) => (dispatch) => {
+//userDash
+export const empDash = (deptid) => (dispatch) => {
     
-    const obj = {
-        userid: userid, issueid: issueid,
-        service: service, dept: dept, 
-        sub: sub, issue: issue,
-        proof: { 
-            proofname: proofname, 
-            prooftype: prooftype 
-        },
-        proofData: proofData, 
-        status: 'pending',
-        date: new Date().toISOString() 
-    };
+    let obj = {deptid: deptid};
 
-    console.log('ActionCrea2: ', obj.proofData); 
-
-    return fetch(baseUrl + 'postComplaint', {
+    return fetch(baseUrl + 'empDash', {
         method: 'POST',
         body: JSON.stringify(obj),
         headers: {
             'Content-type': 'application/json'
         },
+        credentials: 'same-origin'
+    })
+    .then(res => {
+        if(res.ok)
+          return res;
+        else {
+           var error = new Error('Error :'+res.status+': '+res.statusText);
+           error.response = res;
+           throw error;
+       }
+   }, error => {
+       var errmess = new Error(error.message);
+       throw errmess;
+   })
+   .then(res => res.json())
+   .then(res => {
+       if(!res.isErr) 
+         dispatch(addEmpDash(res.data))
+   })
+   .catch(err => alert(err));
+};
+
+export const addEmpDash = (res) => ({
+    type: ActionTypes.ADD_EMP_DASH,
+    payload: res 
+});
+
+
+// postComplaint
+export const postComplaint = (fdata) => (dispatch) => {
+
+    return fetch(baseUrl + 'postComplaint', {
+        method: 'POST',
+        body: fdata,
         credentials: 'same-origin'
     })
     .then(res => {

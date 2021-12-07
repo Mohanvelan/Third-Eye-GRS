@@ -65,13 +65,11 @@ class Header extends Component
 
    renderNav() {
 
-      const cookies = new Cookies();
-      const uname = cookies.get('userid');
 
       if(this.props.isLogin === false) {
          
         return(
-         <div className=''>
+         <div className='container-fluid'>
             <Navbar expand='md' className='subnav px-3 row'>
                <div className='col-7'>
                   <Nav navbar className='ml-auto'>
@@ -99,7 +97,7 @@ class Header extends Component
       }
       else {
         return(
-         <div>
+         <div className='container-fluid'>
             <Navbar expand='md' className='subnav p-2 row'>
                <div className='col-9'>
                   <Nav navbar className='px-5'>
@@ -124,18 +122,14 @@ class Header extends Component
         );
       }
    }
-
-   componentDidMount() {
-      
-   }  
+ 
    
    
    render() {
   
-     // console.log('render', JSON.stringify(this.props.udata));
         return(
            <div >
-            <Navbar dark expand='md' style={{position: 'sticky'}}>
+            <Navbar dark expand='md'>
               <div className='container'>
                  <NavbarBrand className='mr-auto' style={{fontFamily:  "Goudy Bookletter 1911"}} >
                    <div className='row'>
@@ -174,11 +168,13 @@ class Header extends Component
                </div>
             </Navbar>
           
-         
+         <div>
         
            { this.renderNav() }
         
            { this.renderModal() }
+         
+         </div>
          
          
          </div>

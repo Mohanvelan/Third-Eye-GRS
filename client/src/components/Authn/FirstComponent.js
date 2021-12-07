@@ -44,7 +44,7 @@ function CardView2(props){
       <>
          <Card className='ml-2 p-3 cview' style={{borderRadius: '18px'}}>
             <CardBody body inverse>
-                <CardTitle><b>Admin Login</b></CardTitle>
+                <CardTitle><b>Employee Login</b></CardTitle>
                 <CardText>For Officials</CardText>
                 
                 <div className='row row-content mt-4 px-2'>
@@ -107,7 +107,8 @@ class First extends Component
             cookies.set('userid', userid, { path: '/'});
 
             window.location.reload();
-            window.location.href = '/user/home';        
+            window.location.href = '/user/home'; 
+            return;       
          
         }
 
@@ -123,6 +124,7 @@ class First extends Component
 
                 window.location.reload();
                 window.location.href = '/emp/home';
+                return;
         }
        
         else 
